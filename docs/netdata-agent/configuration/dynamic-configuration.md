@@ -302,7 +302,7 @@ Alerts use a **two-level enablement model**, and understanding it resolves the c
 
 :::important
 
-Enabling a prototype only re-activates the rules whose per-rule `enabled` flag is `true`. It does **not** automatically re-enable rules that were individually disabled. When toggling a prototype on produces a large count (for example "899 alerts"), that number is the set of rules that already had `enabled: true` across the prototype(s) — not newly-created alerts, and not previously-disabled rules being turned back on.
+Enabling a prototype only re-activates the rules whose per-rule `enabled` flag is `true`. It does **not** automatically re-enable rules that were individually disabled. When toggling a prototype on produces a large count (for example "899 alerts"), that count comes from the rules that still have `enabled: true` — each enabled rule instantiates across every chart it matches — so it is not newly-created alert definitions, and it does not include the rules you individually disabled.
 
 :::
 
