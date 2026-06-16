@@ -293,6 +293,33 @@ In Netdata, HTTP 412 is used to indicate that an authorization bearer token was 
 
 For more information, see [Secure Your Netdata Agent with Bearer Token Protection](/docs/netdata-agent/configuration/secure-your-netdata-agent-with-bearer-token.md).
 
+### "No items to enable" when enabling a single alert
+
+Alerts use a **two-level enablement model**, and understanding it resolves the confusion between enabling a prototype and enabling individual alerts:
+
+1. **Prototype level** — Each alert prototype (the entity you toggle on/off from the Alerts tab or Space Settings → Configurations → Health) has its own enable/disable switch.
+2. **Per-rule level** — Every prototype contains a `rules` array, and each rule carries its own `enabled` flag.
+
+:::important
+
+Enabling a prototype only re-activates the rules whose per-rule `enabled` flag is `true`. It does **not** automatically re-enable rules that were individually disabled. When toggling a prototype on produces a large count (for example "899 alerts"), that number is the set of rules that already had `enabled: true` across the prototype(s) — not newly-created alerts, and not previously-disabled rules being turned back on.
+
+:::
+
+If every rule in a prototype has its per-rule `enabled` flag set to `false`, enabling that prototype has nothing to activate. The Agent returns **HTTP 400** with the message:
+
+> all rules in this alert are disabled, so enabling the alert has no effect
+
+In the UI this surfaces as **"no items to enable"**.
+
+**To enable a single alert:**
+
+1. Open the specific alert prototype from the **Alerts tab** or **Space Settings → Configurations → Health**.
+2. Open its **Update** form.
+3. Set the `enabled` flag of the rule you want to `true` (and, optionally, set the other rules' `enabled` flags to `false`).
+4. **Save** the updated prototype.
+5. **Enable** the prototype. Only the rule(s) you marked `enabled: true` become active.
+
 ---
 
 Experience the efficiency and power of the Dynamic Configuration Manager in Netdata today. Whether you're managing a handful of nodes or a vast infrastructure, this feature will make your monitoring and alerting tasks smoother and more intuitive.
